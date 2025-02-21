@@ -3,17 +3,7 @@ import { useState } from "react";
 import { CatalogView } from "./components/CatalogView";
 import { CartView } from "./components/CartView";
 
-const initialCartItems = [
-    // {
-    //     product: {
-    //         id: 1,
-    //         name: '',
-    //         description: '',
-    //         price: ''
-    //     },
-    //     quantity: 0,
-    // }
-]
+const initialCartItems = JSON.parse(sessionStorage.getItem('cart')) || [];
 
 export const CartApp = () => {
     const [cartItems, setCartItems] = useState(initialCartItems);
@@ -25,6 +15,7 @@ export const CartApp = () => {
                 cartItems.map(item => {
                     if (item.product.id === product.id) {
                         item.quantity = item.quantity + 1
+                        item.total = item.quantity * item.product.price
                     }
                     return item;
                 }
@@ -37,7 +28,7 @@ export const CartApp = () => {
                     product,
                     // product:product
                     quantity: 1,
-                    total: product.price * 1
+                    total: product.price
                 }
             ]);
         }

@@ -1,5 +1,15 @@
+import { useEffect, useState } from "react";
+import { calculateTotal } from "../services/productsService";
+
 export const CartView = ({ handleDeleteItem, items }) => {
     // const { product, quantity, total } = cartItems;
+    const [total, setTotal] = useState(0);
+
+    useEffect(() => {
+        setTotal(calculateTotal(items));
+        sessionStorage.setItem('cart', JSON.stringify(items));
+        //sessionStorage guarda solo string, por ello debemos convertir el objeto js de itmes a string
+    }, [items]);
     return (
         <>
             <h3>Carro de compras</h3>
@@ -29,7 +39,7 @@ export const CartView = ({ handleDeleteItem, items }) => {
                 <tfoot>
                     <tr>
                         <td colSpan="3" className="text-end fw-bold">Total</td>
-                        <td colSpan="2" className="text-start fw-bold">$1234</td>
+                        <td colSpan="2" className="text-start fw-bold">${total}</td>
                     </tr>
                 </tfoot>
             </table>
