@@ -1,41 +1,44 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useReducer } from "react";
 import { CatalogView } from "./components/CatalogView";
 import { CartView } from "./components/CartView";
+import { itemsReducer } from "./reducer/itemsReducer";
 
 const initialCartItems = JSON.parse(sessionStorage.getItem('cart')) || [];
 export const CartApp = () => {
-    const [cartItems, setCartItems] = useState(initialCartItems);
+
+    const [cartItems, dispatch] = useReducer(itemsReducer, initialCartItems)
+
+    useEffect(() => {
+        sessionStorage.setItem('cart', JSON.stringify(cartItems));
+        //sessionStorage guarda solo string, por ello debemos convertir el objeto js de itmes a string
+    }, [cartItems]);
 
     const handleAddProductCart = (product) => {
+
         const hastItem = cartItems.find((item) => item.product.id === product.id)
         if (hastItem) {
-            setCartItems(
-                cartItems.map(item => {
-                    if (item.product.id === product.id) {
-                        item.quantity = item.quantity + 1
-                        item.total = item.quantity * item.product.price
-                    }
-                    return item;
+            dispatch(
+                {
+                    type: 'UpdateQuantityProductCart',
+                    payload: product
                 }
-                )
             );
         } else {
-            setCartItems([
-                ...cartItems,
+            dispatch(
                 {
-                    product,
-                    // product:product
-                    quantity: 1,
-                    total: product.price
+                    type: 'AddProductCart',
+                    payload: product
                 }
-            ]);
+            );
         }
     };
     const handleDeletItem = (id) => {
-        setCartItems([
-            ...cartItems.filter(item => item.product.id !== id)
-        ]);
+        dispatch(
+            {
+                type: 'DeleteProductCart',
+                id
+            }
+        );
     };
 
     return (
@@ -52,9 +55,9 @@ export const CartApp = () => {
                             <CartView items={cartItems} handleDeleteItem={(id) => handleDeletItem(id)} />
                         </div>
                     )
-                //cartItems? -> significa 'si cartItems es distinto a null'
-                //.length <= 0 ->'y además su longitu es menor o igual a cero'
-                // 'entonces no muestres nada o si no se cumple muestra el comonente div'
+                    //cartItems? -> significa 'si cartItems es distinto a null'
+                    //.length <= 0 ->'y además su longitu es menor o igual a cero'
+                    // 'entonces no muestres nada o si no se cumple muestra el comonente div'
                 }
             </div>
         </>

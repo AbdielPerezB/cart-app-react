@@ -7,8 +7,6 @@ export const CartView = ({ handleDeleteItem, items }) => {
 
     useEffect(() => {
         setTotal(calculateTotal(items));
-        sessionStorage.setItem('cart', JSON.stringify(items));
-        //sessionStorage guarda solo string, por ello debemos convertir el objeto js de itmes a string
     }, [items]);
     return (
         <>
@@ -25,12 +23,12 @@ export const CartView = ({ handleDeleteItem, items }) => {
                 </thead>
                 <tbody>
                     {
-                        items.map(({product: {id, name, price}, quantity}) => (
+                        items.map(({product: {id, name, price}, quantity, total}) => (
                             <tr key={id}>
                                 <td>{name}</td>
                                 <td>{price}</td>
                                 <td>{quantity}</td>
-                                <td>{price*quantity}</td>
+                                <td>{total}</td>
                                 <td><button className="btn btn-danger" onClick={() => handleDeleteItem(id)}>ELimnar</button></td>
                             </tr>
                         ))
