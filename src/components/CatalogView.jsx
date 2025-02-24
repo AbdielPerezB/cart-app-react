@@ -22,7 +22,7 @@ export const CatalogView = ({ handle }) => {
                         </div>
                     ))
                 }
-            </div>
+            </div> 
         </>
     )
 }
